@@ -1,14 +1,14 @@
 library(jsonlite)
 library(tidyverse)
 library(writexl)
-library(readr)
+library(readr) 
 
 LoadExportedPEPData <- function(pepDataFolder, outputFolder){
   tryCatch(
     {
-      subFolders <- list.dirs(pepDataFolder)[-1]
-      dfFiles <- data.frame()
-      
+      subFolders <- list.dirs(pepDataFolder, recursive = FALSE)[-1]
+      dfFiles <- data.frame()     
+
       # Gather available files (data columns) from subfolders
       for (subFolder in subFolders) {
         id <- tail(strsplit(subFolder, "/")[[1]], 1)
@@ -19,13 +19,13 @@ LoadExportedPEPData <- function(pepDataFolder, outputFolder){
           }
         }
       }
-      dfFiles <- unique(dfFiles)
-      
+      dfFiles <- unique(dfFiles)     
+
       # Iterate over files and save merged data per file/data column
       for (i in 1:nrow(dfFiles)) {
         df <- data.frame()
-        print(dfFiles[i,])
-        
+        print(dfFiles[i,])       
+
         for (subFolder in subFolders) {
           id <- tail(strsplit(subFolder, "/")[[1]], 1)
           path <- paste0(subFolder, "/", dfFiles[i,])
@@ -35,7 +35,6 @@ LoadExportedPEPData <- function(pepDataFolder, outputFolder){
             if(jsonlite::validate(value) && grepl("{", value, fixed = TRUE)){
               data <- fromJSON(txt = value)
               row <- data.frame(ID = id, data$crf, data$reports)
-              df <- bind_rows(df, row)
             } else{
               row <- data.frame(ID = id, value)
             }
