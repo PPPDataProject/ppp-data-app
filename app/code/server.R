@@ -23,6 +23,9 @@ server <- function(input, output, session) {
   observeEvent(input$btn1, {
     pepDatapath <- input$pepDataPath
     outputFolder <- paste0(appDir,"/output")
+    if(!dir.exists(outputFolder)){
+      dir.create(outputFolder)
+    }
     output$feedback <- renderText(paste0("Data merged (stored in ", outputFolder,"), files generated: "))
     output$df <- renderDataTable(LoadExportedPEPData(pepDatapath, outputFolder))
     shell.exec(outputFolder)
