@@ -1,17 +1,24 @@
 # ppp-data-app
 Tool supplied along with data access. Developed by the PPP data team. 
-Feb 2024, Research Support Radboudumc. 
+September 2024, Research Support Radboudumc. 
 Expertisecentrum Parkinson & Bewegingsstoornissen
 
 
 	This app is supplied by the PPP data team in order to run R scripts. Double click on the file 'ppp_data_app.bat' in order to start the app.
+
+	*If you have access to RStudio yourself, it is also possible to run the app using the file in this location: "app/app.R". 
+	*In order to do this, please edit the code in line 3 to: "shiny::runApp(appDir = "./code", launch.browser = TRUE)"
+
 	In this app you may: merge data downloaded from PEP into Excel files per type of data column downloaded.
-	If you have any feedback or questions regarding this app, feel free to contact us at: ppp-data@radboudumc.nl
+	If you have any feedback on or questions regarding this app, feel free to contact us at: ppp-data@radboudumc.nl
+	Any tips for future updates or suggestions on how to improve the app functionality are also highly appreciated!
 	
-	Log files (.json) are stored in /app/code/logs
+	*Log files (.json) are stored in /app/code/logs
 	
 	ACTION
 	Merge PEP downloads to Excel files per data column.
+	This script is developed for handling .json files, other filetypes may not render the expected output. 
+	This is TODO in future app releases.
 	
 		REQUIRED INPUT
 		Path to downloaded PEP data (main directory containing all subdirectories)
