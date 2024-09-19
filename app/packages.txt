@@ -15,3 +15,5 @@ jsonlite
 writexl
 readr
 shinylogs
+plyr
+tools

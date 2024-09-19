@@ -2,6 +2,11 @@ library(jsonlite)
 library(tidyverse)
 library(writexl)
 library(readr) 
+library(plyr)
+library(tools)
+
+#init parameters used in error messages
+path <- "path"
 
 LoadExportedPEPData <- function(pepDataFolder, outputFolder){
   tryCatch(
@@ -29,16 +34,15 @@ LoadExportedPEPData <- function(pepDataFolder, outputFolder){
         for (subFolder in subFolders) {
           id <- tail(strsplit(subFolder, "/")[[1]], 1)
           path <- paste0(subFolder, "/", dfFiles[i,])
+
           if(file.exists(path)){
-            value <- read_file(path)
-            row <- data.frame()
-            if(jsonlite::validate(value) && grepl("{", value, fixed = TRUE)){
-              data <- fromJSON(txt = value)
-              row <- data.frame(ID = id, data$crf, data$reports)
+            if(file_ext(path) == "json"){
+              data <- as.data.frame(read_json(path))
             } else{
-              row <- data.frame(ID = id, value)
+              data <- read_file(path)
             }
-            df <- bind_rows(df, row)
+            row <- data.frame(ID = id, data)
+            df <- rbind.fill(df, row)
           }
         }
         if(dfFiles[i,] != ""){
@@ -50,7 +54,7 @@ LoadExportedPEPData <- function(pepDataFolder, outputFolder){
       return(dfFiles)
     },
     error = function(error) {
-      stop(error)
+      stop(paste0(error, " || ", path))
     }
   )
 }
