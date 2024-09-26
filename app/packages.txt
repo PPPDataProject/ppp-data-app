@@ -13,6 +13,7 @@ shinycssloaders
 tidyverse
 jsonlite
 writexl
+readxl
 readr
 shinylogs
 plyr

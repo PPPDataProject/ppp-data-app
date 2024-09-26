@@ -4,6 +4,7 @@ library(writexl)
 library(readr) 
 library(plyr)
 library(tools)
+library(readxl)
 
 #init parameters used in error messages
 path <- "path"
@@ -38,6 +39,8 @@ LoadExportedPEPData <- function(pepDataFolder, outputFolder){
           if(file.exists(path)){
             if(file_ext(path) == "json"){
               data <- as.data.frame(read_json(path))
+            } else if(file_ext(path) == "xlsx"){
+              data <- read_excel(path)
             } else{
               data <- read_file(path)
             }
