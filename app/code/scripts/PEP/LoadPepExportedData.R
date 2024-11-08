@@ -41,6 +41,12 @@ LoadExportedPEPData <- function(pepDataFolder, outputFolder){
               data <- as.data.frame(read_json(path))
             } else if(file_ext(path) == "xlsx"){
               data <- read_excel(path)
+              if(nrow(data) == 0){
+                toAppend <- rep(NA, ncol(data))
+                cnames <- colnames(data)
+                data <- rbind(data, toAppend)
+                colnames(data) <- cnames
+              }
             } else{
               data <- read_file(path)
             }
