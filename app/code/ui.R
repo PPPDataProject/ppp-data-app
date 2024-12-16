@@ -7,12 +7,13 @@ library(shinylogs)
 # General options
 appDir <- getwd()
 
-# Set app working directory and other configuration
+# Set other configuration
 options(spinner.type = 6, spinner.color = "#0dc5c1")
 padding = "padding:5px; margin-bottom:5px"
 
 ui <- fluidPage(
-  # set error tracking
+  # set theme, error tracking
+  theme = bslib::bs_theme(bootswatch = "pulse"),
   use_tracking(app_name = "ppp_data_app"),
   
   # Title block
@@ -22,14 +23,27 @@ ui <- fluidPage(
   sidebarLayout(
     # Sidebar panel for inputs with output definitions
     sidebarPanel(
-      # Merge downloaded PEP columns into single Excel files
+      # Text input to specify downloaded PEP data
+      div(        
+        textInput(inputId = "pepDataPath", 
+        label = "Path to downloaded PPP data (main directory)",
+        value = paste0(appDir,"/data"))
+      ),
+
       div(
         img(src = "PEP.png", height = 20, width = 40, alt = "PEP"),
-        "Merge PEP downloads to Excel files per data column",
-        textInput(inputId = "pepDataPath", 
-                  label = "Path to downloaded Pep data (main directory)",
-                  value = paste0(appDir,"/data")),
-        actionButton("btn1", "Merge data"),
+        # Merge downloaded PEP columns into single Excel files
+        layout_columns(
+          "Merge PPP downloads to Excel files per data column", 
+          actionButton("btn1", "Merge data", class = "btn btn-primary"),
+        ),
+        hr(),
+
+        # Merge downloaded dataset into single Excel file
+        layout_columns(
+          "Merge PPP dataset to single Excel file",
+          actionButton("btn2", "Merge dataset",  class = "btn btn-primary"),
+        ),
         style = paste("border:1px solid grey;", padding)
       ),
     ),

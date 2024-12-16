@@ -26,3 +26,13 @@ Expertisecentrum Parkinson & Bewegingsstoornissen
 		OUTPUT
 		Single Excel per downloaded filename with all data of the participants merged into that file. For example, if you have 2 data types downloaded (e.g. Castor.Visit1.Data1 & Castor.Visit1.Data2), 
 		you get two Excel files; Castor.Visit1.Data1.xlsx & Castor.Visit1.Data2.xlsx
+
+	ACTION
+	Merge PEP dataset to single Excel file.
+	This script is developed for handling .json, Excel and txt files, other filetypes may not render the expected output. 	
+	
+		REQUIRED INPUT
+		Path to downloaded PEP data (main directory containing all subdirectories)
+					
+		OUTPUT
+		Single Excel file with all data of the dataset merged into that file. In order to prevent variables to be overwritten, variables are prepended with the corresponding Visit (VisitX.variablename) or HomeQuestionnaire (HQX,variablename).

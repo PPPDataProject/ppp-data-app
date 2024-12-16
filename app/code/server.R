@@ -9,6 +9,7 @@ appDir <- getwd()
 
 # Load scripts used in app actions
 source(paste0(appDir, "/scripts/PEP/LoadPepExportedData.R"))
+source(paste0(appDir, "/scripts/PEP/MergeDataset.R"))
 
 # Define server logic
 server <- function(input, output, session) {
@@ -28,6 +29,18 @@ server <- function(input, output, session) {
     }
     output$feedback <- renderText(paste0("Data merged (stored in ", outputFolder,"), files generated: "))
     output$df <- renderDataTable(LoadExportedPEPData(pepDatapath, outputFolder))
+    shell.exec(outputFolder)
+  })
+
+  # Merge downloaded PEP dataset into single Excel file
+  observeEvent(input$btn2, {
+    pepDatapath <- input$pepDataPath
+    outputFolder <- paste0(appDir,"/output")
+    if(!dir.exists(outputFolder)){
+      dir.create(outputFolder)
+    }
+    output$feedback <- renderText(paste0("Dataset merged (stored in ", outputFolder,"), file generated: "))
+    output$df <- renderDataTable(MergeDataset(pepDatapath, outputFolder))
     shell.exec(outputFolder)
   })
   
