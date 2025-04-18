@@ -1,6 +1,6 @@
 # ppp-data-app
 Tool supplied along with data access. Developed by the PPP data team. 
-September 2024, Research Support Radboudumc. 
+April 2025, Research Support Radboudumc. 
 Expertisecentrum Parkinson & Bewegingsstoornissen
 
 
@@ -29,10 +29,10 @@ Expertisecentrum Parkinson & Bewegingsstoornissen
 
 	ACTION
 	Merge PEP dataset to single Excel file.
-	This script is developed for handling .json, Excel and txt files, other filetypes may not render the expected output. 	
+	This script is developed for handling .json, .xlsx (Excel) and .txt files, other filetypes may not render the expected output (zip files for example are currently being skipped).	
 	
 		REQUIRED INPUT
 		Path to downloaded PEP data (main directory containing all subdirectories)
 					
 		OUTPUT
-		Single Excel file with all data of the dataset merged into that file. In order to prevent variables to be overwritten, variables are prepended with the corresponding Visit (VisitX.variablename) or HomeQuestionnaire (HQX,variablename).
+		Single Excel file with all data of the dataset merged into that file. In order to prevent variables to be overwritten, variables are prepended with the corresponding Visit (VisitX.variablename), HomeQuestionnaire (HQX.variablename) or StoolQuestionnaires (SQ.variablename). For questionnaires which have been sent out and filled in more than once, the answerset number (starting at 0) is prepended AS0 to the variables (AS0.variablename).

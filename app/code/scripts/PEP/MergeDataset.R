@@ -34,15 +34,24 @@ MergeDataset <- function(pepDataFolder, outputFolder){
       id <- tail(strsplit(subFolder, "/")[[1]], 1)
       row <- data.frame(ID = id)
       print(id)
+      
       # iterate over all available files and build merged record
-      for (i in 1:nrow(dfFiles)){#) {
+      for (i in 1:nrow(dfFiles)){
         path <- paste0(subFolder, "/", dfFiles[i,])
+        
+        # Files that cannot be processed due to deviant format (no single row data)
+        if(dfFiles[i,] == "FFQI_results_per_item_EN.xlsx") {next}
         
         # check if file exists and read data
         if(file.exists(path)){
-          if(grepl("Castor.", path) || grepl("DD_", path)){
+
+          # Skip zip files, TODO; unzip and add data
+          if(file_ext(path) == "zip"){
+            next
+          }
+          if(file_ext(path) == "json"){
             data <- as.data.frame(read_json(path))
-          } else if(grepl("LEDD", path)){
+          } else if(file_ext(path) == "xlsx"){
             data <- read_excel(path)
           } else{
             data <- read_file(path)
@@ -51,36 +60,40 @@ MergeDataset <- function(pepDataFolder, outputFolder){
             next
           }
           
-          # Append visit or HQ number to prevent overwritten variable values 
+          names(data) <- gsub("crf.", "", names(data))
+          names(data) <- gsub("reports.", "", names(data))
+          
+          # Append visit or (Stool) Questionnaire number to prevent overwritten variable values
           if(grepl("Visit1", dfFiles[i,], fixed = TRUE)){
-              names(data) <- paste("Visit1", names(data), sep = ".")
-              names(data) <- gsub("crf.", "", names(data))
-              names(data) <- gsub("reports.", "", names(data))            
+            names(data) <- paste("Visit1", names(data), sep = ".")
           }
           if(grepl("Visit2", dfFiles[i,], fixed = TRUE)){
-              names(data) <- paste("Visit2", names(data), sep = ".")
-              names(data) <- gsub("crf.", "", names(data))
-              names(data) <- gsub("reports.", "", names(data))            
+            names(data) <- paste("Visit2", names(data), sep = ".")
           }
           if(grepl("Visit3", dfFiles[i,], fixed = TRUE)){
-              names(data) <- paste("Visit3", names(data), sep = ".")
-              names(data) <- gsub("crf.", "", names(data))
-              names(data) <- gsub("reports.", "", names(data))            
+            names(data) <- paste("Visit3", names(data), sep = ".")
           }
           if(grepl("HomeQuestionnaires1", dfFiles[i,], fixed = TRUE)){
-              names(data) <- paste("HQ1", names(data), sep = ".")
-              names(data) <- gsub("crf.", "", names(data))
-              names(data) <- gsub("reports.", "", names(data))            
+            names(data) <- paste("HQ1", names(data), sep = ".")
           }
           if(grepl("HomeQuestionnaires2", dfFiles[i,], fixed = TRUE)){
-              names(data) <- paste("HQ2", names(data), sep = ".")
-              names(data) <- gsub("crf.", "", names(data))
-              names(data) <- gsub("reports.", "", names(data))            
+            names(data) <- paste("HQ2", names(data), sep = ".")
           }
           if(grepl("HomeQuestionnaires3", dfFiles[i,], fixed = TRUE)){
-              names(data) <- paste("HQ3", names(data), sep = ".")
-              names(data) <- gsub("crf.", "", names(data))
-              names(data) <- gsub("reports.", "", names(data))            
+            names(data) <- paste("HQ3", names(data), sep = ".")
+          }
+          if(grepl("StoolQuestionnaire1", dfFiles[i,], fixed = TRUE)){
+            names(data) <- paste("SQ1", names(data), sep = ".")
+          }
+          if(grepl("StoolQuestionnaire2", dfFiles[i,], fixed = TRUE)){
+            names(data) <- paste("SQ2", names(data), sep = ".")
+          }
+          if(grepl("StoolQuestionnaire3", dfFiles[i,], fixed = TRUE)){
+            names(data) <- paste("SQ3", names(data), sep = ".")
+          }
+          if(grepl("AnswerSet", dfFiles[i,], fixed = TRUE)){
+            answerSet <- gsub(".json", "", paste0("AS", tail(strsplit(path, "AnswerSet")[[1]], 1)))
+            names(data) <- paste(answerSet, names(data), sep = ".")
           }
           
           #append data to merged participant data
@@ -91,14 +104,10 @@ MergeDataset <- function(pepDataFolder, outputFolder){
       df <- rbind.fill(df, row)
     }
 
-    colnames(df) <- gsub("crf.", "", colnames(df))
-    colnames(df) <- gsub("reports.", "", colnames(df))
-    write_xlsx(df, paste0(outputFolder, "/merged-ppp-dataset.xlsx"))
+    write_xlsx(df, paste0(outputFolder, "/merged-ppp-dataset.xlsx"), use_zip64 = TRUE)
     return(df)
   },
   error = function(error) {
     stop(paste0(error, " || ", path))
   })
 }
-
-
